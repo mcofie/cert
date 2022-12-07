@@ -1,0 +1,298 @@
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="https://designs.hubtel.com/v4/assets/images/hub.png" type="image/png" sizes="16x16">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://designs.hubtel.com/v4/assets/css/main.css" rel="stylesheet">
+
+    <title>Insurance Certificate</title>
+
+    <style>
+        .insurance-body {
+            min-height: 100vh;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            font-family: unset;
+        }
+
+        .insurance {
+            height: 297mm;
+            width: 210mm;
+        }
+
+        .insurance-border {
+            border: 3px solid #1F90FF;
+            color: #1F90FF;
+            font-style: italic;
+        }
+
+        .font-normal {
+            font-style: normal;
+        }
+
+    </style>
+    <style type="text/css">
+        @font-face {
+            font-weight: 400;
+            font-style: normal;
+            font-family: 'Circular-Loom';
+
+            src: url('chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/CircularXXWeb-Book.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-weight: 500;
+            font-style: normal;
+            font-family: 'Circular-Loom';
+
+            src: url('chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/CircularXXWeb-Medium.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-weight: 700;
+            font-style: normal;
+            font-family: 'Circular-Loom';
+
+            src: url('chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/CircularXXWeb-Bold.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-weight: 900;
+            font-style: normal;
+            font-family: 'Circular-Loom';
+
+            src: url('chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/fonts/CircularXXWeb-Black.woff2') format('woff2');
+        }</style>
+
+    <script type="application/javascript">
+
+        const baseURL = 'https://instantservicesinsurance.hubtel.com/certificateproxy/'
+        const dataModel = {
+            "expiryDate": "",
+            "id": "",
+            "vehicleRegistrationNumber": "",
+            "inceptionDate": "",
+            "policyHolder": "",
+            "policyNumber": "",
+            "serialNumber": ""
+        }
+
+        //Get current ID from URL
+        function getUrlParameters(parameter, staticURL, decode) {
+            let currLocation = (staticURL.length) ? staticURL : window.location.search,
+                parArr = currLocation.split("?")[1].split("&"),
+                returnBool = true;
+
+            for (let i = 0; i < parArr.length; i++) {
+                parr = parArr[i].split("=");
+                if (parr[0] == parameter) {
+                    return (decode) ? decodeURIComponent(parr[1]) : parr[1];
+                    returnBool = true;
+                } else {
+                    returnBool = false;
+                }
+            }
+
+            if (!returnBool) return false;
+        }
+
+        let fullPath = baseURL + getUrlParameters("id", document.URL, true)
+        fetch(`${fullPath}`)
+            .then(response => response.json())
+            .then(data => {
+                Object.assign(dataModel, data.data)
+
+                if (data.code === "404") {
+                    document.querySelector("#error-wrapper").classList.remove("d-none")
+                    document.querySelector("#cert-wrapper").classList.add("d-none")
+                } else {
+                    document.querySelector("#error-wrapper").classList.add("d-none")
+                    document.querySelector("#cert-wrapper").classList.remove("d-none")
+                }
+
+                document.querySelector('#serial_number').innerHTML = dataModel.serialNumber
+                document.querySelector('#policy_number').innerHTML = dataModel.policyNumber
+                document.querySelector('#car_number').innerHTML = dataModel.vehicleRegistrationNumber
+                document.querySelector('#customer_name').innerHTML = dataModel.policyHolder
+                document.querySelector('#effective_date').innerHTML = dataModel.inceptionDate
+                document.querySelector('#expiry_date').innerHTML = dataModel.expiryDate
+            }).catch((error) => {
+            console.log('Error:', error);
+        });
+
+    </script>
+</head>
+<body>
+<div class="insurance-body">
+    <div id="cert-wrapper" class="insurance d-none">
+        <div class="p-5 h-100">
+            <p class="mb-0 text-end" id="serial_number">%SNUMBER%</p>
+            <div class="insurance-border p-3 h-100 position-relative">
+                <div class="d-flex align-items-center mb-3">
+                    <div>
+                        <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png" class=""
+                             width="170">
+                    </div>
+                    <div class="ms-5 text-center">
+                        <h5 class="font-weight-bold mb-0">Motor Vehicles (Third Party Insurance) </h5>
+                        <h6 class="mb-2">Act, 1958 (Ghana) </h6>
+                        <h4 class="font-weight-bolder mb-0 font-normal">Certificate of Insurance </h4>
+                    </div>
+                </div>
+                <div class="">
+                    <div class="row justify-content-between">
+                        <div class="col-6">
+                            <h6 class="font-weight-bold mb-2">POLICY NUMBER</h6>
+                        </div>
+                        <div class="text-black font-normal col-5">
+                            <h6 class="font-weight-bolder mb-2" id="policy_number">%POLICYNUMBER%</h6>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class="col-6">
+                            <p class="mb-1">1. Index mark and registration number of vehicle</p>
+                        </div>
+                        <div class="text-black font-normal col-5">
+                            <h6 class="font-weight-bolder mb-1" id="car_number">%CARNUMBER%</h6>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class="col-6">
+                            <p class="mb-1">2. Name of Policyholder</p>
+                        </div>
+                        <div class="text-black font-normal col-5">
+                            <h6 class="font-weight-bolder mb-1" id="customer_name">%CUSTOMERNAME%</h6>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class="col-6">
+                            <p class="mb-1 pe-3">3. Effective date of the commencement of insurance for the purpose of
+                                the Act(s)</p>
+                        </div>
+                        <div class="text-black font-normal col-5">
+                            <h6 class="font-weight-bolder mb-1" id="effective_date">%EFFECTIVEDATE</h6>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class="col-6">
+                            <p class="mb-1">4. Date of expiry of Insurance</p>
+                        </div>
+                        <div class="text-black font-normal col-5">
+                            <h6 class="font-weight-bolder mb-1" id="expiry_date">%EXPIRYDATE%</h6>
+                        </div>
+                    </div>
+                    <div class="row justify-content-between">
+                        <div class="col-6">
+                            <p class="mb-1">5. Persons or classes of persons entitled to drive *</p>
+                        </div>
+                        <div class="text-black font-normal col-5">
+                            <h6 class="font-weight-bolder mb-1"></h6>
+                        </div>
+                    </div>
+                    <div class="pb-5">
+                        <div class="d-flex mb-2 pe-5">
+                            <p class="mb-1 me-1">a. </p>
+                            <div>
+                                <p class="mb-1">The Policyholder</p>
+                                <p class="mb-0">The policyholder may also drive a Motor Vehicle not belonging to him and
+                                    not hired to him a hire purchase agreement.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-2 pe-5">
+                            <p class="mb-1 me-1">b. </p>
+                            <div>
+                                <p class="mb-1">Any other person who is driving on the Policyholder's order or with his
+                                    permission.</p>
+                                <p class="mb-0">Provided that the person driving is permitted in accordance with the
+                                    licensing or other laws or regulations to drive the Motor Vehicle or has been so
+                                    permitted and is not disqualified by order of a Court of Law or by reason of any
+                                    enactment or regulation in that behalf from driving such Motor Vehicle.</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-2">
+                            <p class="mb-1 me-1">6. </p>
+                            <div>
+                                <p class="mb-0 font-weight-bold">Limitations as to use *</p>
+                                <div class="ms-1">
+                                    <p>a. Use only for social domestic and pleasure purposes and for Policyholder's
+                                        business.</p>
+
+                                    <div class="mb-3">
+                                        <p class="font-weight-bold mb-0">The Policy does not cover:</p>
+                                        <p class="mb-0">Use for hire or reward or racing pace-making reliability trial
+                                            or speed-testing or use for any purpose in connection with the Motor
+                                            Trade.</p>
+                                    </div>
+
+                                    <p class="mb-0 pe-5">*Limitaions rendered inoperative by the provisions of the Motor
+                                        Vehicles (Third Party Insurance) Act.1958 are not to be included under this
+                                        heading.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3" style="border-top: 2px solid #1F90FF;">
+                        <p class="mb-3 font-normal pe-5">I/We hereby Certify that the policy to which the Certificate
+                            relates is issued in accordance with the provisions of the Motor Vehicles (Third Party
+                            Insurance) Act, 1958 (Ghana)</p>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <img src="https://designs.hubtel.com/v4/assets/images/insurance/stamp.png" class=""
+                                 width="200">
+                            <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature.png" class=""
+                                 width="200">
+                        </div>
+                    </div>
+
+                </div>
+                <img src="https://designs.hubtel.com/v4/assets/images/insurance/banner.png" class="position-absolute"
+                     width="350" style="bottom: 0; right: 0;">
+            </div>
+        </div>
+    </div>
+    <div id="error-wrapper" class="wrapper wrapper--no-sidebar d-none ">
+        <div class="container-wrap align-items-center d-flex h-100 justify-content-center">
+            <div class="">
+                <div class="container">
+                    <div class="justify-content-center">
+                        <section class="text-center">
+                            <img src="https://designs.hubtel.com/v3/app/dist/images/404.svg" width="300px" alt="404"
+                                 class="img-fluid">
+                            <div class="my-3">
+                                <h3>Error 404: Page not found</h3>
+                                <p>The page you are looking for doesn't exist</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script defer=""
+        src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993"
+        integrity="sha512-0ahDYl866UMhKuYcW078ScMalXqtFJggm7TmlUtp0UlD4eQk0Ixfnm5ykXKvGJNFjLMoortdseTfsRT8oCfgGA=="
+        data-cf-beacon="{&quot;rayId&quot;:&quot;77510f6aae91033a&quot;,&quot;token&quot;:&quot;5f4f22e669d54423a93b2e43037c9d74&quot;,&quot;version&quot;:&quot;2022.11.3&quot;,&quot;si&quot;:100}"
+        crossorigin="anonymous"></script>
+
+</body>
+<loom-container id="lo-engage-ext-container">
+    <loom-shadow classname="resolved"></loom-shadow>
+</loom-container>
+<loom-container id="lo-companion-container">
+    <loom-shadow classname="resolved"></loom-shadow>
+</loom-container>
+</html>
