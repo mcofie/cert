@@ -85,7 +85,9 @@
             "inceptionDate": "",
             "policyHolder": "",
             "policyNumber": "",
-            "serialNumber": ""
+            "serialNumber": "",
+            "coverType": "",
+            "usageType": ""
         }
 
         //Get current ID from URL
@@ -119,7 +121,42 @@
                 } else {
                     document.querySelector("#error-wrapper").classList.add("d-none")
                     document.querySelector("#cert-wrapper").classList.remove("d-none")
+
+
+                    let [usage, coverType] = [dataModel.usageType.toLowerCase(), dataModel.coverType.toLowerCase()];
+                    let certTypes = ['#x1_tp', '#x1_tpf', '#x1_comp', '#z4_tp', '#z4_tpf', '#z4_comp']
+                    let index = 0
+
+                    switch (usage) {
+                        case "private":
+                            if (coverType === 'comprehensive') {
+                                index = certTypes.indexOf('#x1_comp')
+                            } else if (coverType === 'third party only') {
+                                index = certTypes.indexOf('#x1_tp')
+                            } else if (coverType === 'third party, fire & theft') {
+                                index = certTypes.indexOf('#x1_tpf')
+                            }
+                            break;
+                        case "hiring":
+                        case "taxi":
+                        case "minibus":
+                            if (coverType === 'comprehensive') {
+                                index = certTypes.indexOf('#z4_comp')
+                            } else if (coverType === 'third party only') {
+                                index = certTypes.indexOf('#z4_tp')
+                            } else if (coverType === 'third party, fire & theft') {
+                                index = certTypes.indexOf('#z4_tpf')
+                            }
+                            break;
+                    }
+
+
+                    certTypes.splice(index, 1)
+                    certTypes.forEach((v, i) => {
+                        document.querySelector(certTypes[i]).remove()
+                    })
                 }
+
 
                 document.querySelector('#serial_number').innerHTML = dataModel.serialNumber
                 document.querySelector('#policy_number').innerHTML = dataModel.policyNumber
@@ -134,127 +171,193 @@
     </script>
 </head>
 <body>
-<div class="insurance-body">
-    <div id="cert-wrapper" class="insurance d-none">
+
+<!--X1 TP-->
+<div class="insurance-body" id="x1_tp">
+    <div id="cert-wrapper" class="insurance">
         <div class="p-5 h-100">
             <p class="mb-0 text-end" id="serial_number">%SNUMBER%</p>
             <div class="insurance-border p-3 h-100 position-relative">
-                <div class="d-flex align-items-center mb-3">
-                    <div>
-                        <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png" class=""
-                             width="170">
+                <div class="row justify-content-center align-items-end py-3">
+                    <div class="col-3">
+                        <div>
+                            <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png"
+                                 class=""
+                                 width="170">
+                        </div>
                     </div>
-                    <div class="ms-5 text-center">
-                        <h5 class="font-weight-bold mb-0">Motor Vehicles (Third Party Insurance) </h5>
-                        <h6 class="mb-2">Act, 1958 (Ghana) </h6>
-                        <h4 class="font-weight-bolder mb-0 font-normal">Certificate of Insurance </h4>
+                    <div class="col-6">
+                        <div class="text-center">
+                            <h5 class="font-weight-bold mb-0">
+                                Motor Vehicles (Third Party Insurance)
+                            </h5>
+                            <h6 class="mb-2">Act, 1958 (Ghana)</h6>
+                            <h4 class="font-weight-bolder mb-0 font-normal">
+                                Certificate of Insurance
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <p
+                                class="text-uppercase text-black font-weight-bolder mb-0 small"
+                        >
+                            Certificate number
+                        </p>
                     </div>
                 </div>
                 <div class="">
                     <div class="row justify-content-between">
                         <div class="col-6">
-                            <h6 class="font-weight-bold mb-2">POLICY NUMBER</h6>
+                            <h6 class="font-weight-bolder mb-2">POLICY NUMBER</h6>
                         </div>
                         <div class="text-black font-normal col-5">
-                            <h6 class="font-weight-bolder mb-2" id="policy_number">%POLICYNUMBER%</h6>
+                            <h6 class="font-weight-bolder mb-2" id="policy_number">
+                                %POLICYNUMBER%
+                            </h6>
                         </div>
                     </div>
                     <div class="row justify-content-between">
                         <div class="col-6">
-                            <p class="mb-1">1. Index mark and registration number of vehicle</p>
+                            <div class="d-flex gap-2">
+                                <p class="mb-0">1.</p>
+                                <p class="mb-1">
+                                    Index mark and registration number of vehicle
+                                </p>
+                            </div>
                         </div>
                         <div class="text-black font-normal col-5">
-                            <h6 class="font-weight-bolder mb-1" id="car_number">%CARNUMBER%</h6>
+                            <h6 class="font-weight-bolder mb-1" id="car_number">
+                                %CARNUMBER%
+                            </h6>
                         </div>
                     </div>
                     <div class="row justify-content-between">
                         <div class="col-6">
-                            <p class="mb-1">2. Name of Policyholder</p>
+                            <div class="d-flex gap-2">
+                                <p class="mb-0">2.</p>
+                                <p class="mb-1">Name of Policyholder</p>
+                            </div>
                         </div>
                         <div class="text-black font-normal col-5">
-                            <h6 class="font-weight-bolder mb-1" id="customer_name">%CUSTOMERNAME%</h6>
+                            <h6 class="font-weight-bolder mb-1" id="customer_name">
+                                %CUSTOMERNAME%
+                            </h6>
                         </div>
                     </div>
                     <div class="row justify-content-between">
                         <div class="col-6">
-                            <p class="mb-1 pe-3">3. Effective date of the commencement of insurance for the purpose of
-                                the Act(s)</p>
+                            <div class="d-flex gap-2">
+                                <p class="mb-0">3.</p>
+                                <p class="mb-1">
+                                    Effective date of the commencement of insurance for the
+                                    purpose of the Act(s)
+                                </p>
+                            </div>
                         </div>
                         <div class="text-black font-normal col-5">
-                            <h6 class="font-weight-bolder mb-1" id="effective_date">%EFFECTIVEDATE</h6>
+                            <h6 class="font-weight-bolder mb-1" id="effective_date">
+                                %EFFECTIVEDATE
+                            </h6>
                         </div>
                     </div>
                     <div class="row justify-content-between">
                         <div class="col-6">
-                            <p class="mb-1">4. Date of expiry of Insurance</p>
+                            <div class="d-flex gap-2">
+                                <p class="mb-0">4.</p>
+                                <p class="mb-2">Date of expiry of Insurance</p>
+                            </div>
                         </div>
                         <div class="text-black font-normal col-5">
-                            <h6 class="font-weight-bolder mb-1" id="expiry_date">%EXPIRYDATE%</h6>
+                            <h6 class="font-weight-bolder mb-1" id="expiry_date">
+                                %EXPIRYDATE%
+                            </h6>
                         </div>
                     </div>
                     <div class="row justify-content-between">
-                        <div class="col-6">
-                            <p class="mb-1">5. Persons or classes of persons entitled to drive *</p>
-                        </div>
-                        <div class="text-black font-normal col-5">
-                            <h6 class="font-weight-bolder mb-1"></h6>
+                        <div class="col-7">
+                            <div class="d-flex gap-2">
+                                <p class="mb-0">5.</p>
+                                <p class="mb-2">
+                                    Persons or classes of persons entitled to drive *
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div class="pb-5">
                         <div class="d-flex mb-2 pe-5">
-                            <p class="mb-1 me-1">a. </p>
+                            <p class="mb-1 me-1">a.</p>
                             <div>
                                 <p class="mb-1">The Policyholder</p>
-                                <p class="mb-0">The policyholder may also drive a Motor Vehicle not belonging to him and
-                                    not hired to him a hire purchase agreement.</p>
+                                <p class="mb-0">
+                                    The policyholder may also drive a Motor Vehicle not
+                                    belonging to him and not hired to him a hire purchase
+                                    agreement.
+                                </p>
                             </div>
                         </div>
                         <div class="d-flex mb-2 pe-5">
-                            <p class="mb-1 me-1">b. </p>
+                            <p class="mb-1 me-1">b.</p>
                             <div>
-                                <p class="mb-1">Any other person who is driving on the Policyholder's order or with his
-                                    permission.</p>
-                                <p class="mb-0">Provided that the person driving is permitted in accordance with the
-                                    licensing or other laws or regulations to drive the Motor Vehicle or has been so
-                                    permitted and is not disqualified by order of a Court of Law or by reason of any
-                                    enactment or regulation in that behalf from driving such Motor Vehicle.</p>
+                                <p class="mb-1">
+                                    Any other person who is driving on the Policyholder's
+                                    order or with his permission.
+                                </p>
+                                <p class="mb-0">
+                                    Provided that the person driving is permitted in
+                                    accordance with the licensing or other laws or regulations
+                                    to drive the Motor Vehicle or has been so permitted and is
+                                    not disqualified by order of a Court of Law or by reason
+                                    of any enactment or regulation in that behalf from driving
+                                    such Motor Vehicle.
+                                </p>
                             </div>
                         </div>
 
                         <div class="d-flex mb-2">
-                            <p class="mb-1 me-1">6. </p>
+                            <p class="mb-1 me-1">6.</p>
                             <div>
-                                <p class="mb-0 font-weight-bold">Limitations as to use *</p>
+                                <p class="mb-0 font-weight-bolder">
+                                    Limitations as to use *
+                                </p>
                                 <div class="ms-1">
-                                    <p>a. Use only for social domestic and pleasure purposes and for Policyholder's
-                                        business.</p>
+                                    <p>
+                                        a. Use only for social domestic and pleasure purposes
+                                        and for Policyholder's business.
+                                    </p>
 
                                     <div class="mb-3">
-                                        <p class="font-weight-bold mb-0">The Policy does not cover:</p>
-                                        <p class="mb-0">Use for hire or reward or racing pace-making reliability trial
-                                            or speed-testing or use for any purpose in connection with the Motor
-                                            Trade.</p>
+                                        <p class="font-weight-bolder mb-0">
+                                            The Policy does not cover:
+                                        </p>
+                                        <p class="mb-0">
+                                            Use for hire or reward or racing pace-making
+                                            reliability trial or speed-testing or use for any
+                                            purpose in connection with the Motor Trade.
+                                        </p>
                                     </div>
 
-                                    <p class="mb-0 pe-5">*Limitaions rendered inoperative by the provisions of the Motor
-                                        Vehicles (Third Party Insurance) Act.1958 are not to be included under this
-                                        heading.</p>
+                                    <p class="mb-0 pe-5">
+                                        *Limitaions rendered inoperative by the provisions of
+                                        the Motor Vehicles (Third Party Insurance) Act.1958 are
+                                        not to be included under this heading.
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-3" style="border-top: 2px solid #1F90FF;">
-                        <p class="mb-3 font-normal pe-5">I/We hereby Certify that the policy to which the Certificate
-                            relates is issued in accordance with the provisions of the Motor Vehicles (Third Party
-                            Insurance) Act, 1958 (Ghana)</p>
+                    <div class="pt-2" style="border-top: 1px solid #1f90ff">
+                        <p class="mb-2 font-normal pe-5">
+                            I/We hereby Certify that the policy to which the Certificate
+                            relates is issued in accordance with the provisions of the
+                            Motor Vehicles (Third Party Insurance) Act, 1958 (Ghana)
+                        </p>
                         <div class="d-flex align-items-center justify-content-between">
                             <img src="https://designs.hubtel.com/v4/assets/images/insurance/stamp.png" class=""
                                  width="200">
-                            <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature.png" class=""
+                            <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature-new.png" class=""
                                  width="200">
                         </div>
                     </div>
-
                 </div>
                 <img src="https://designs.hubtel.com/v4/assets/images/insurance/banner.png" class="position-absolute"
                      width="350" style="bottom: 0; right: 0;">
@@ -279,8 +382,1092 @@
             </div>
         </div>
     </div>
-
 </div>
+
+
+<!--X1 COMP-->
+<div class="insurance-body" id="x1_comp">
+    <div class="insurance-body">
+        <div id="cert-wrapper" class="insurance">
+            <div class="p-5 h-100">
+                <p class="mb-0 text-end" id="serial_number">%SNUMBER%</p>
+                <div class="insurance-border p-3 h-100 position-relative">
+                    <div class="row justify-content-center align-items-end py-3">
+                        <div class="col-3">
+                            <div>
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png"
+                                     class=""
+                                     width="170">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5 class="font-weight-bold mb-0">
+                                    Motor Vehicles (Third Party Insurance)
+                                </h5>
+                                <h6 class="mb-2">Act, 1958 (Ghana)</h6>
+                                <h4 class="font-weight-bolder mb-0 font-normal">
+                                    Certificate of Insurance
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <p
+                                    class="text-uppercase text-black font-weight-bolder mb-0 small"
+                            ><span class="text-decoration-underline">Comprehensive</span>
+                                Certificate number
+                            </p>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <h6 class="font-weight-bolder mb-2">POLICY NUMBER</h6>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-2" id="policy_number">
+                                    %POLICYNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">1.</p>
+                                    <p class="mb-1">
+                                        Index mark and registration number of vehicle
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="car_number">
+                                    %CARNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">2.</p>
+                                    <p class="mb-1">Name of Policyholder</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="customer_name">
+                                    %CUSTOMERNAME%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">3.</p>
+                                    <p class="mb-1">
+                                        Effective date of the commencement of insurance for the
+                                        purpose of the Act(s)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="effective_date">
+                                    %EFFECTIVEDATE
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">4.</p>
+                                    <p class="mb-2">Date of expiry of Insurance</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="expiry_date">
+                                    %EXPIRYDATE%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-7">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">5.</p>
+                                    <p class="mb-2">
+                                        Persons or classes of persons entitled to drive *
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pb-5">
+                            <div class="d-flex mb-2 pe-5">
+                                <p class="mb-1 me-1">a.</p>
+                                <div>
+                                    <p class="mb-1">The Policyholder</p>
+                                    <p class="mb-0">
+                                        The policyholder may also drive a Motor Vehicle not
+                                        belonging to him and not hired to him a hire purchase
+                                        agreement.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-2 pe-5">
+                                <p class="mb-1 me-1">b.</p>
+                                <div>
+                                    <p class="mb-1">
+                                        Any other person who is driving on the Policyholder's
+                                        order or with his permission.
+                                    </p>
+                                    <p class="mb-0">
+                                        Provided that the person driving is permitted in
+                                        accordance with the licensing or other laws or regulations
+                                        to drive the Motor Vehicle or has been so permitted and is
+                                        not disqualified by order of a Court of Law or by reason
+                                        of any enactment or regulation in that behalf from driving
+                                        such Motor Vehicle.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex mb-2">
+                                <p class="mb-1 me-1">6.</p>
+                                <div>
+                                    <p class="mb-0 font-weight-bolder">
+                                        Limitations as to use *
+                                    </p>
+                                    <div class="ms-1">
+                                        <p>
+                                            a. Use only for social domestic and pleasure purposes
+                                            and for Policyholder's business.
+                                        </p>
+
+                                        <div class="mb-3">
+                                            <p class="font-weight-bolder mb-0">
+                                                The Policy does not cover:
+                                            </p>
+                                            <p class="mb-0">
+                                                Use for hire or reward or racing pace-making
+                                                reliability trial or speed-testing or use for any
+                                                purpose in connection with the Motor Trade.
+                                            </p>
+                                        </div>
+
+                                        <p class="mb-0 pe-5">
+                                            *Limitaions rendered inoperative by the provisions of
+                                            the Motor Vehicles (Third Party Insurance) Act.1958 are
+                                            not to be included under this heading.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2" style="border-top: 1px solid #b18c2f">
+                            <p class="mb-2 font-normal pe-5">
+                                I/We hereby Certify that the policy to which the Certificate
+                                relates is issued in accordance with the provisions of the
+                                Motor Vehicles (Third Party Insurance) Act, 1958 (Ghana)
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/stamp.png" class=""
+                                     width="200">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature-new.png"
+                                     class=""
+                                     width="200">
+                            </div>
+                        </div>
+                    </div>
+                    <img src="https://designs.hubtel.com/v4/assets/images/insurance/banner.png"
+                         class="position-absolute"
+                         width="350" style="bottom: 0; right: 0;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-wrapper" class="wrapper wrapper--no-sidebar d-none ">
+        <div class="container-wrap align-items-center d-flex h-100 justify-content-center">
+            <div class="">
+                <div class="container">
+                    <div class="justify-content-center">
+                        <section class="text-center">
+                            <img src="https://designs.hubtel.com/v3/app/dist/images/404.svg" width="300px" alt="404"
+                                 class="img-fluid">
+                            <div class="my-3">
+                                <h3>Error 404: Page not found</h3>
+                                <p>The page you are looking for doesn't exist</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--X1 Third Party & Fire and Theft-->
+<div class="insurance-body" id="x1_tpf">
+    <div class="insurance-body">
+        <div id="cert-wrapper" class="insurance">
+            <div class="p-5 h-100">
+                <p class="mb-0 text-end" id="serial_number">%SNUMBER%</p>
+                <div class="insurance-border p-3 h-100 position-relative">
+                    <div class="row justify-content-center align-items-end py-3">
+                        <div class="col-3">
+                            <div>
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png"
+                                     class=""
+                                     width="170">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5 class="font-weight-bold mb-0">
+                                    Motor Vehicles (Third Party Insurance)
+                                </h5>
+                                <h6 class="mb-2">Act, 1958 (Ghana)</h6>
+                                <h4 class="font-weight-bolder mb-0 font-normal">
+                                    Certificate of Insurance
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <p class="text-black font-weight-bolder mb-0 small font-normal">
+                                Third Party -Fire & Theft
+                            </p>
+                            <p
+                                    class="text-uppercase text-black font-weight-bolder mb-0 small"
+                            >
+                                Certificate number
+                            </p>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <h6 class="font-weight-bolder mb-2">POLICY NUMBER</h6>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-2" id="policy_number">
+                                    %POLICYNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">1.</p>
+                                    <p class="mb-1">
+                                        Index mark and registration number of vehicle
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="car_number">
+                                    %CARNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">2.</p>
+                                    <p class="mb-1">Name of Policyholder</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="customer_name">
+                                    %CUSTOMERNAME%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">3.</p>
+                                    <p class="mb-1">
+                                        Effective date of the commencement of insurance for the
+                                        purpose of the Act(s)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="effective_date">
+                                    %EFFECTIVEDATE
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">4.</p>
+                                    <p class="mb-2">Date of expiry of Insurance</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="expiry_date">
+                                    %EXPIRYDATE%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-7">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">5.</p>
+                                    <p class="mb-2">
+                                        Persons or classes of persons entitled to drive *
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pb-5">
+                            <div class="d-flex mb-2 pe-5">
+                                <p class="mb-1 me-1">a.</p>
+                                <div>
+                                    <p class="mb-1">The Policyholder</p>
+                                    <p class="mb-0">
+                                        The policyholder may also drive a Motor Vehicle not
+                                        belonging to him and not hired to him a hire purchase
+                                        agreement.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex mb-2 pe-5">
+                                <p class="mb-1 me-1">b.</p>
+                                <div>
+                                    <p class="mb-1">
+                                        Any other person who is driving on the Policyholder's
+                                        order or with his permission.
+                                    </p>
+                                    <p class="mb-0">
+                                        Provided that the person driving is permitted in
+                                        accordance with the licensing or other laws or regulations
+                                        to drive the Motor Vehicle or has been so permitted and is
+                                        not disqualified by order of a Court of Law or by reason
+                                        of any enactment or regulation in that behalf from driving
+                                        such Motor Vehicle.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex mb-2">
+                                <p class="mb-1 me-1">6.</p>
+                                <div>
+                                    <p class="mb-0 font-weight-bolder">
+                                        Limitations as to use *
+                                    </p>
+                                    <div class="ms-1">
+                                        <p>
+                                            a. Use only for social domestic and pleasure purposes
+                                            and for Policyholder's business.
+                                        </p>
+
+                                        <div class="mb-3">
+                                            <p class="font-weight-bolder mb-0">
+                                                The Policy does not cover:
+                                            </p>
+                                            <p class="mb-0">
+                                                Use for hire or reward or racing pace-making
+                                                reliability trial or speed-testing or use for any
+                                                purpose in connection with the Motor Trade.
+                                            </p>
+                                        </div>
+
+                                        <p class="mb-0 pe-5">
+                                            *Limitaions rendered inoperative by the provisions of
+                                            the Motor Vehicles (Third Party Insurance) Act.1958 are
+                                            not to be included under this heading.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2" style="border-top: 1px solid #1f90ff">
+                            <p class="mb-2 font-normal pe-5">
+                                I/We hereby Certify that the policy to which the Certificate
+                                relates is issued in accordance with the provisions of the
+                                Motor Vehicles (Third Party Insurance) Act, 1958 (Ghana)
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/stamp.png" class=""
+                                     width="200">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature-new.png"
+                                     class=""
+                                     width="200">
+                            </div>
+                        </div>
+                    </div>
+                    <img src="https://designs.hubtel.com/v4/assets/images/insurance/banner.png"
+                         class="position-absolute"
+                         width="350" style="bottom: 0; right: 0;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-wrapper" class="wrapper wrapper--no-sidebar d-none ">
+        <div class="container-wrap align-items-center d-flex h-100 justify-content-center">
+            <div class="">
+                <div class="container">
+                    <div class="justify-content-center">
+                        <section class="text-center">
+                            <img src="https://designs.hubtel.com/v3/app/dist/images/404.svg" width="300px" alt="404"
+                                 class="img-fluid">
+                            <div class="my-3">
+                                <h3>Error 404: Page not found</h3>
+                                <p>The page you are looking for doesn't exist</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Z405 Third Party, Fire and Theft-->
+<div class="insurance-body" id="z4_tpf">
+    <div class="insurance-body">
+        <div id="cert-wrapper" class="insurance">
+            <div class="p-5 h-100">
+                <p class="mb-0 text-end" id="serial_number">%SNUMBER%</p>
+                <div class="insurance-border p-3 h-100 position-relative" style="color: #ff3399;">
+                    <div class="row justify-content-center align-items-end py-3">
+                        <div class="col-3">
+                            <div>
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png"
+                                     class=""
+                                     width="170">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5 class="font-weight-bold mb-0">
+                                    Motor Vehicles (Third Party Insurance)
+                                </h5>
+                                <h6 class="mb-2">Act, 1958 (Ghana)</h6>
+                                <h4 class="font-weight-bolder mb-0 font-normal">
+                                    Certificate of Insurance
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <p class="text-black  mb-0 small font-normal">
+                                Third Party -Fire & Theft
+                            </p>
+                            <p
+                                    class="text-uppercase text-black font-weight-bolder mb-0 small"
+                            >
+                                Certificate number
+                            </p>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <h6 class="font-weight-bolder mb-2">POLICY NUMBER</h6>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-2" id="policy_number">
+                                    %POLICYNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">1.</p>
+                                    <p class="mb-1">
+                                        Index mark and registration number of vehicle
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="car_number">
+                                    %CARNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">2.</p>
+                                    <p class="mb-1">Name of Policyholder</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="customer_name">
+                                    %CUSTOMERNAME%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">3.</p>
+                                    <p class="mb-1">
+                                        Effective date of the commencement of insurance for the
+                                        purpose of the Act(s)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="effective_date">
+                                    %EFFECTIVEDATE
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">4.</p>
+                                    <p class="mb-2">Date of expiry of Insurance</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="expiry_date">
+                                    %EXPIRYDATE%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-12 pe-5">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">5.</p>
+                                    <p class="mb-2">
+                                        Persons or classes of persons entitled to drive
+                                    </p>
+                                </div>
+                                <ul>
+                                    <li><p class="mb-0">a. The Policyholder</p></li>
+                                    <li>
+                                        <p class="mb-2">
+                                            b. Any other person provided he is in the Policyholder's
+                                            employ and is driving onhis order or with his
+                                            permission.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p class="mb-0">
+                                            Provided that the person driving is permitted in
+                                            accordance with the licensing or other laws or
+                                            regulations to drive the Motor Vehicle or has been so
+                                            permitted and is not disqualified by order of a Court of
+                                            Law or by reason of any enactment or regulation in that
+                                            behalf from driving such Motor Vehicle.
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pb-4">
+                            <p class="mb-1 font-weight-bolder ms-3">
+                                Limitations as to use *
+                            </p>
+                            <div class="d-flex gap-2 mb-2">
+                                <div><p class="mb-1 me-1">6.</p></div>
+
+
+                                <div class="">
+                                    <p class="mb-0">
+                                        Use for carriage of passengers or goods in connection
+                                        with Policyholder's business.
+                                    </p>
+                                    <p class="mb-0">Use for social domestic and pleasure purposes.</p>
+
+                                    <div class="mt-2">
+                                        <p class="font-weight-bolder mb-0">
+                                            The Policy does not cover:
+                                        </p>
+                                        <p class="mb-0">
+                                            1. Use racing pace-making reliability trial or speed testing.
+                                        </p>
+                                        <p class="mb-0">2. Use whilst drawing a trailer except towing (other than for
+                                            reward) of anyone disabled mechanically-propelled vehicle.</p>
+                                    </div>
+
+                                    <p class="mt-1 pe-5">
+                                        *Limitaions rendered inoperative by the provisions of
+                                        the Motor Vehicles (Third Party Insurance) Act.1958 are
+                                        not to be included under this heading.
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="pt-2" style="border-top: 1px solid #ff3399">
+                            <p class="mb-2 font-normal pe-5">
+                                I/We hereby Certify that the policy to which the Certificate
+                                relates is issued in accordance with the provisions of the
+                                Motor Vehicles (Third Party Insurance) Act, 1958 (Ghana).
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/stamp.png" class=""
+                                     width="200">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature-new.png"
+                                     class=""
+                                     width="200">
+                            </div>
+                        </div>
+                    </div>
+                    <img src="https://designs.hubtel.com/v4/assets/images/insurance/banner.png"
+                         class="position-absolute"
+                         width="350" style="bottom: 0; right: 0;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-wrapper" class="wrapper wrapper--no-sidebar d-none ">
+        <div class="container-wrap align-items-center d-flex h-100 justify-content-center">
+            <div class="">
+                <div class="container">
+                    <div class="justify-content-center">
+                        <section class="text-center">
+                            <img src="https://designs.hubtel.com/v3/app/dist/images/404.svg" width="300px" alt="404"
+                                 class="img-fluid">
+                            <div class="my-3">
+                                <h3>Error 404: Page not found</h3>
+                                <p>The page you are looking for doesn't exist</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Z405 TP-->
+<div class="insurance-body" id="z4_tp">
+    <div class="insurance-body">
+        <div class="insurance">
+            <div class="p-5 h-100">
+                <p class="mb-0 text-end">%SNUMBER%</p>
+                <div class="insurance-border p-3 h-100 position-relative" style="color: #ff3399;">
+                    <div class="row justify-content-center align-items-end py-3">
+                        <div class="col-3">
+                            <div>
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png"
+                                     class=""
+                                     width="170">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5 class="font-weight-bold mb-0">
+                                    Motor Vehicles (Third Party Insurance)
+                                </h5>
+                                <h6 class="mb-2">Act, 1958 (Ghana)</h6>
+                                <h4 class="font-weight-bolder mb-0 font-normal">
+                                    Certificate of Insurance
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <p
+                                    class="text-uppercase text-black font-weight-bolder mb-0 small"
+                            >
+                                Certificate number
+                            </p>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <h6 class="font-weight-bolder mb-2">POLICY NUMBER</h6>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-2" id="policy_number">
+                                    %POLICYNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">1.</p>
+                                    <p class="mb-1">
+                                        Index mark and registration number of vehicle
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="car_number">
+                                    %CARNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">2.</p>
+                                    <p class="mb-1">Name of Policyholder</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="customer_name">
+                                    %CUSTOMERNAME%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">3.</p>
+                                    <p class="mb-1">
+                                        Effective date of the commencement of insurance for the
+                                        purpose of the Act(s)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="effective_date">
+                                    %EFFECTIVEDATE
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">4.</p>
+                                    <p class="mb-2">Date of expiry of Insurance</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="expiry_date">
+                                    %EXPIRYDATE%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-12 pe-5">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">5.</p>
+                                    <p class="mb-2">
+                                        Persons or classes of persons entitled to drive
+                                    </p>
+                                </div>
+                                <ul>
+                                    <li><p class="mb-0">a. The Policyholder</p></li>
+                                    <li>
+                                        <p class="mb-2">
+                                            b. Any other person provided he is in the Policyholder's
+                                            employ and is driving onhis order or with his
+                                            permission.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p class="mb-0">
+                                            Provided that the person driving is permitted in
+                                            accordance with the licensing or other laws or
+                                            regulations to drive the Motor Vehicle or has been so
+                                            permitted and is not disqualified by order of a Court of
+                                            Law or by reason of any enactment or regulation in that
+                                            behalf from driving such Motor Vehicle.
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pb-4">
+                            <p class="mb-1 font-weight-bolder ms-3">
+                                Limitations as to use *
+                            </p>
+                            <div class="d-flex gap-2 mb-2">
+                                <div><p class="mb-1 me-1">6.</p></div>
+
+                                <div class="">
+                                    <p class="mb-0">
+                                        Use for carriage of passengers or goods in connection with
+                                        Policyholder's business.
+                                    </p>
+                                    <p class="mb-0">
+                                        Use for social domestic and pleasure purposes.
+                                    </p>
+
+                                    <div class="mt-2">
+                                        <p class="font-weight-bolder mb-0">
+                                            The Policy does not cover:
+                                        </p>
+                                        <p class="mb-0">
+                                            1. Use racing pace-making reliability trial or speed
+                                            testing.
+                                        </p>
+                                        <p class="mb-0">
+                                            2. Use whilst drawing a trailer except towing (other
+                                            than for reward) of anyone disabled
+                                            mechanically-propelled vehicle.
+                                        </p>
+                                    </div>
+
+                                    <p class="mt-1 pe-5">
+                                        *Limitaions rendered inoperative by the provisions of the
+                                        Motor Vehicles (Third Party Insurance) Act.1958 are not to
+                                        be included under this heading.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2" style="border-top: 1px solid #ff3399">
+                            <p class="mb-2 font-normal pe-5">
+                                I/We hereby Certify that the policy to which the Certificate
+                                relates is issued in accordance with the provisions of the
+                                Motor Vehicles (Third Party Insurance) Act, 1958 (Ghana).
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/stamp.png" class=""
+                                     width="200">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature-new.png"
+                                     class=""
+                                     width="200">
+                            </div>
+                        </div>
+                    </div>
+                    <img src="https://designs.hubtel.com/v4/assets/images/insurance/banner.png"
+                         class="position-absolute"
+                         width="350" style="bottom: 0; right: 0;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-wrapper" class="wrapper wrapper--no-sidebar d-none ">
+        <div class="container-wrap align-items-center d-flex h-100 justify-content-center">
+            <div class="">
+                <div class="container">
+                    <div class="justify-content-center">
+                        <section class="text-center">
+                            <img src="https://designs.hubtel.com/v3/app/dist/images/404.svg" width="300px" alt="404"
+                                 class="img-fluid">
+                            <div class="my-3">
+                                <h3>Error 404: Page not found</h3>
+                                <p>The page you are looking for doesn't exist</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--Z405 COMP-->
+<div class="insurance-body" id="z4_comp">
+    <div class="insurance-body">
+        <div class="insurance">
+            <div class="p-5 h-100">
+                <p class="mb-0 text-end">%SNUMBER%</p>
+                <div class="insurance-border p-3 h-100 position-relative"
+                     style="color: #ff3399;">
+                    <div class="row justify-content-center align-items-end py-3">
+                        <div class="col-3">
+                            <div>
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/enterprise-logo.png"
+                                     class=""
+                                     width="170">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <h5 class="font-weight-bold mb-0">
+                                    Motor Vehicles (Third Party Insurance)
+                                </h5>
+                                <h6 class="mb-2">Act, 1958 (Ghana)</h6>
+                                <h4 class="font-weight-bolder mb-0 font-normal">
+                                    Certificate of Insurance
+                                </h4>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <p
+                                    class="text-uppercase text-black font-weight-bolder mb-0 small text-end"
+                            >
+                                <span class="text-decoration-underline">Comprehensive</span>
+                                Certificate number
+                            </p>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <h6 class="font-weight-bolder mb-2">POLICY NUMBER</h6>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-2" id="policy_number">
+                                    %POLICYNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">1.</p>
+                                    <p class="mb-1">
+                                        Index mark and registration number of vehicle
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="car_number">
+                                    %CARNUMBER%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">2.</p>
+                                    <p class="mb-1">Name of Policyholder</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="customer_name">
+                                    %CUSTOMERNAME%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">3.</p>
+                                    <p class="mb-1">
+                                        Effective date of the commencement of insurance for the
+                                        purpose of the Act(s)
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="effective_date">
+                                    %EFFECTIVEDATE
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">4.</p>
+                                    <p class="mb-2">Date of expiry of Insurance</p>
+                                </div>
+                            </div>
+                            <div class="text-black font-normal col-5">
+                                <h6 class="font-weight-bolder mb-1" id="expiry_date">
+                                    %EXPIRYDATE%
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="row justify-content-between">
+                            <div class="col-12 pe-5">
+                                <div class="d-flex gap-2">
+                                    <p class="mb-0">5.</p>
+                                    <p class="mb-2">
+                                        Persons or classes of persons entitled to drive
+                                    </p>
+                                </div>
+                                <ul>
+                                    <li>
+                                        <p class="mb-0">a. The Policyholder</p>
+                                    </li>
+                                    <li>
+                                        <p class="mb-2">
+                                            b. Any other person provided he is in the Policyholder's
+                                            employ and is driving onhis order or with his
+                                            permission.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <p class="mb-0">
+                                            Provided that the person driving is permitted in
+                                            accordance with the licensing or other laws or
+                                            regulations to drive the Motor Vehicle or has been so
+                                            permitted and is not disqualified by order of a Court of
+                                            Law or by reason of any enactment or regulation in that
+                                            behalf from driving such Motor Vehicle.
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="pb-4">
+                            <p class="mb-1 font-weight-bolder ms-3">
+                                Limitations as to use *
+                            </p>
+                            <div class="d-flex gap-2 mb-2">
+                                <div>
+                                    <p class="mb-1 me-1">6.</p>
+                                </div>
+
+                                <div class="">
+                                    <p class="mb-0">
+                                        Use for carriage of passengers or goods in connection with
+                                        Policyholder's business.
+                                    </p>
+                                    <p class="mb-0">
+                                        Use for social domestic and pleasure purposes.
+                                    </p>
+
+                                    <div class="mt-2">
+                                        <p class="font-weight-bolder mb-0">
+                                            The Policy does not cover:
+                                        </p>
+                                        <p class="mb-0">
+                                            1. Use racing pace-making reliability trial or speed
+                                            testing.
+                                        </p>
+                                        <p class="mb-0">
+                                            2. Use whilst drawing a trailer except towing (other
+                                            than for reward) of anyone disabled
+                                            mechanically-propelled vehicle.
+                                        </p>
+                                    </div>
+
+                                    <p class="mt-1 pe-5">
+                                        *Limitaions rendered inoperative by the provisions of the
+                                        Motor Vehicles (Third Party Insurance) Act.1958 are not to
+                                        be included under this heading.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-2" style="border-top: 1px solid #ff3399">
+                            <p class="mb-2 font-normal pe-5">
+                                I/We hereby Certify that the policy to which the Certificate
+                                relates is issued in accordance with the provisions of the
+                                Motor Vehicles (Third Party Insurance) Act, 1958 (Ghana).
+                            </p>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/stamp.png" class=""
+                                     width="200">
+                                <img src="https://designs.hubtel.com/v4/assets/images/insurance/signature-new.png"
+                                     class=""
+                                     width="200">
+                            </div>
+                        </div>
+                    </div>
+                    <img src="https://designs.hubtel.com/v4/assets/images/insurance/banner.png"
+                         class="position-absolute"
+                         width="350" style="bottom: 0; right: 0;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="error-wrapper" class="wrapper wrapper--no-sidebar d-none ">
+        <div class="container-wrap align-items-center d-flex h-100 justify-content-center">
+            <div class="">
+                <div class="container">
+                    <div class="justify-content-center">
+                        <section class="text-center">
+                            <img src="https://designs.hubtel.com/v3/app/dist/images/404.svg" width="300px" alt="404"
+                                 class="img-fluid">
+                            <div class="my-3">
+                                <h3>Error 404: Page not found</h3>
+                                <p>The page you are looking for doesn't exist</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script defer=""
         src="https://static.cloudflareinsights.com/beacon.min.js/vaafb692b2aea4879b33c060e79fe94621666317369993"
@@ -289,10 +1476,4 @@
         crossorigin="anonymous"></script>
 
 </body>
-<loom-container id="lo-engage-ext-container">
-    <loom-shadow classname="resolved"></loom-shadow>
-</loom-container>
-<loom-container id="lo-companion-container">
-    <loom-shadow classname="resolved"></loom-shadow>
-</loom-container>
 </html>
